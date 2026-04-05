@@ -106,7 +106,7 @@
       "&": ".|:.",
       ":": "|||:.",
       ";": "|.|.|.",
-      "=": "|:.|",
+      "="": "|:.|",
       "+": ".|.|.",
       "-": "|::|",
       "_": ":||.|",
@@ -133,38 +133,31 @@
       output.value = translateToMorse(input.value);
     }
 
-    function getEmoticonAt(text, index) {
-      for (const emoticon of EMOTICONS) {
-        if (text.startsWith(emoticon, index)) {
-          return emoticon;
-        }
-      }
-      return "";
-    }
-
     function translateToMorse(text) {
       let result = "";
+      let i = 0;
 
-      for (let i = 0; i < text.length; i++) {
+      while (i < text.length) {
         const emoticon = getEmoticonAt(text, i);
 
         if (emoticon) {
           result += emoticon + " ";
-          i += emoticon.length - 1;
+          i += emoticon.length;
           continue;
         }
 
         const char = text[i];
 
-        // FIX: remove leading space before newline
         if (char === "\n") {
           result = result.trimEnd();
           result += "\n";
+          i++;
           continue;
         }
 
         if (char === " ") {
           result += "   ";
+          i++;
           continue;
         }
 
@@ -176,9 +169,20 @@
         } else {
           result += char + " ";
         }
+
+        i++;
       }
 
       return result.trimEnd();
+    }
+
+    function getEmoticonAt(text, index) {
+      for (const emoticon of EMOTICONS) {
+        if (text.startsWith(emoticon, index)) {
+          return emoticon;
+        }
+      }
+      return "";
     }
 
     updateOutput();
