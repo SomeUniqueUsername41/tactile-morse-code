@@ -13,8 +13,7 @@
     }
 
     textarea,
-    .output-box,
-    select {
+    .output-box {
       width: 800px;
       max-width: 2000px;
       min-width: 300px;
@@ -36,24 +35,10 @@
     .output-box {
       font-size: 20px;
     }
-
-    select {
-      height: auto;
-      min-height: 0;
-      resize: none;
-    }
   </style>
 </head>
 <body>
   <h1>Tactile Morse code translator</h1>
-
-    <div id="input-form">
-    <label for="mode">Translation mode</label>
-    <select id="mode">
-      <option value="text-to-morse">Text to Morse code</option>
-      <option value="morse-to-text">Morse code to text</option>
-    </select>
-  </div>
 
   <div id="input-form">
     <label for="input">Enter text here</label>
@@ -70,7 +55,6 @@
   <script>
     const input = document.getElementById("input");
     const output = document.getElementById("output");
-    const mode = document.getElementById("mode");
 
     const MORSE_CODE = {
       "A": ".|",
@@ -138,11 +122,6 @@
       "Ü": ":||"
     };
 
-    const REVERSE_MORSE_CODE = {};
-    for (const key in MORSE_CODE) {
-      REVERSE_MORSE_CODE[MORSE_CODE[key]] = key;
-    }
-
     const EMOTICONS = [
       ">:(", ">:)", ">:D", "D:<", ":)", ":(",
       ";)", ":D", "D:", ";D", ":P", "OoO", "O.O",
@@ -150,14 +129,9 @@
     ].sort((a, b) => b.length - a.length);
 
     input.addEventListener("input", updateOutput);
-    mode.addEventListener("change", updateOutput);
 
     function updateOutput() {
-      if (mode.value === "text-to-morse") {
-        output.value = translateToMorse(input.value);
-      } else {
-        output.value = translateToText(input.value);
-      }
+      output.value = translateToMorse(input.value);
     }
 
     function translateToMorse(text) {
@@ -190,30 +164,6 @@
       }
 
       return result.trim();
-    }
-
-    function translateToText(morseText) {
-      const words = morseText.trim().split(/\s*\/\s*/);
-      let result = [];
-
-      for (const word of words) {
-        if (!word.trim()) continue;
-
-        const letters = word.trim().split(/\s+/);
-        let translatedWord = "";
-
-        for (const letter of letters) {
-          if (REVERSE_MORSE_CODE[letter]) {
-            translatedWord += REVERSE_MORSE_CODE[letter];
-          } else {
-            translatedWord += letter;
-          }
-        }
-
-        result.push(translatedWord);
-      }
-
-      return result.join(" ");
     }
 
     function getEmoticonAt(text, index) {
