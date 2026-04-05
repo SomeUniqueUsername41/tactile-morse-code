@@ -134,30 +134,25 @@
     }
 
     function translateToMorse(text) {
-      let result = "";
-      let i = 0;
+      return text.split(/\r?\n/).map(translateLine).join("\n");
+    }
 
-      while (i < text.length) {
+    function translateLine(text) {
+      let result = "";
+
+      for (let i = 0; i < text.length; i++) {
         const emoticon = getEmoticonAt(text, i);
 
         if (emoticon) {
           result += emoticon + " ";
-          i += emoticon.length;
+          i += emoticon.length - 1;
           continue;
         }
 
         const char = text[i];
 
-        if (char === "\n") {
-          result = result.trimEnd();
-          result += "\n";
-          i++;
-          continue;
-        }
-
         if (char === " ") {
           result += "   ";
-          i++;
           continue;
         }
 
@@ -169,8 +164,6 @@
         } else {
           result += char + " ";
         }
-
-        i++;
       }
 
       return result.trimEnd();
