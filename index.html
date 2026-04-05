@@ -133,6 +133,15 @@
       output.value = translateToMorse(input.value);
     }
 
+    function getEmoticonAt(text, index) {
+      for (const emoticon of EMOTICONS) {
+        if (text.startsWith(emoticon, index)) {
+          return emoticon;
+        }
+      }
+      return "";
+    }
+
     function translateToMorse(text) {
       let result = "";
 
@@ -146,6 +155,13 @@
         }
 
         const char = text[i];
+
+        // FIX: remove leading space before newline
+        if (char === "\n") {
+          result = result.trimEnd();
+          result += "\n";
+          continue;
+        }
 
         if (char === " ") {
           result += "   ";
@@ -162,16 +178,7 @@
         }
       }
 
-      return result.trim();
-    }
-
-    function getEmoticonAt(text, index) {
-      for (const emoticon of EMOTICONS) {
-        if (text.startsWith(emoticon, index)) {
-          return emoticon;
-        }
-      }
-      return "";
+      return result.trimEnd();
     }
 
     updateOutput();
